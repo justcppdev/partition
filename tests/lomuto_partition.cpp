@@ -4,119 +4,132 @@
 #include "lomuto_partition.hpp"
 
 template <typename Iterator>
-bool equal( Iterator first, Iterator last, std::vector<int> const & array )
+bool equal( range_t<Iterator> range, std::vector<int> const & array )
 {
-    return std::equal( first, last, array.begin(), array.end() );
+    return std::equal( range.begin,
+                      range.begin + range.size,
+                      array.begin(),
+                      array.end() );
+}
+
+TEST_CASE("lomuto partition on empty array", "")
+{
+    std::vector<int> array = {};
+    auto partition = lomuto_partition( array.begin() , array.end(), 0 );
+    
+    REQUIRE( equal( partition.less, {} ) );
+    REQUIRE( equal( partition.equal, {} ) );
+    REQUIRE( equal( partition.great, {} ) );
 }
 
 TEST_CASE("lomuto partition on sorted array in ascending order", "")
 {
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {1} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1, 2};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {1, 2} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {1, 2} ) );
     }
     
     {
         std::vector<int> array = {1, 2};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2} ) );
     }
     
     {
         std::vector<int> array = {1, 2};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1, 2};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {1, 2} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1, 2} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1, 2, 3};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {1, 2, 3} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {1, 2, 3} ) );
     }
     
     {
         std::vector<int> array = {1, 2, 3};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2, 3} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2, 3} ) );
     }
     
     {
         std::vector<int> array = {1, 2, 3};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {3} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {3} ) );
     }
     
     {
         std::vector<int> array = {1, 2, 3};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {1, 2} ) );
-        REQUIRE( equal( res.first, res.second, {3} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1, 2} ) );
+        REQUIRE( equal( partition.equal, {3} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1, 2, 3};
-        auto res = lomuto_partition( array.begin() , array.end(), 4 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 4 );
         
-        REQUIRE( equal( array.begin(), res.first, {1, 2, 3} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1, 2, 3} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
 }
 
@@ -124,110 +137,110 @@ TEST_CASE("lomuto partition on sorted array in descending order", "")
 {
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {1} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {2, 1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {2, 1} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {2, 1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {3, 2, 1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {3, 2, 1} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2, 3} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2, 3} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {3} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {3} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {3} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {2, 1} ) );
+        REQUIRE( equal( partition.equal, {3} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 4 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 4 );
         
-        REQUIRE( equal( array.begin(), res.first, {3, 2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {3, 2, 1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
 }
 
@@ -235,109 +248,109 @@ TEST_CASE("lomuto partition on shuffled array", "")
 {
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {1} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {2, 1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {2, 1} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {2, 1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 0 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 0 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {3, 2, 1} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {3, 2, 1} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 1 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 1 );
         
-        REQUIRE( equal( array.begin(), res.first, {} ) );
-        REQUIRE( equal( res.first, res.second, {1} ) );
-        REQUIRE( equal( res.second, array.end(), {2, 3} ) );
+        REQUIRE( equal( partition.less, {} ) );
+        REQUIRE( equal( partition.equal, {1} ) );
+        REQUIRE( equal( partition.great, {2, 3} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 2 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 2 );
         
-        REQUIRE( equal( array.begin(), res.first, {1} ) );
-        REQUIRE( equal( res.first, res.second, {2} ) );
-        REQUIRE( equal( res.second, array.end(), {3} ) );
+        REQUIRE( equal( partition.less, {1} ) );
+        REQUIRE( equal( partition.equal, {2} ) );
+        REQUIRE( equal( partition.great, {3} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 3 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 3 );
         
-        REQUIRE( equal( array.begin(), res.first, {2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {3} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {2, 1} ) );
+        REQUIRE( equal( partition.equal, {3} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
     
     {
         std::vector<int> array = {3, 2, 1};
-        auto res = lomuto_partition( array.begin() , array.end(), 4 );
+        auto partition = lomuto_partition( array.begin() , array.end(), 4 );
         
-        REQUIRE( equal( array.begin(), res.first, {3, 2, 1} ) );
-        REQUIRE( equal( res.first, res.second, {} ) );
-        REQUIRE( equal( res.second, array.end(), {} ) );
+        REQUIRE( equal( partition.less, {3, 2, 1} ) );
+        REQUIRE( equal( partition.equal, {} ) );
+        REQUIRE( equal( partition.great, {} ) );
     }
 }
