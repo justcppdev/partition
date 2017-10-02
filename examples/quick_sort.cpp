@@ -1,13 +1,17 @@
+#include <iostream>
+#include <sstream>
+#include <vector>
+
 #include "hoare_partition.hpp"
 #include "lomuto_partition.hpp"
 
 template <typename _ForwardIterator>
-auto quick_sort_using_lomuto_partition( _ForwardIterator first, _ForwardIterator last )
+auto quick_sort_using_hoare_partition( _ForwardIterator first, _ForwardIterator last )
 {
 }
 
 template <typename _BidirectionalIterator>
-auto quick_sort_using_lomuto_partition( _BidirectionalIterator first, _BidirectionalIterator last )
+void quick_sort_using_lomuto_partition( _BidirectionalIterator first, _BidirectionalIterator last )
 {
     if( first != last ) {
         auto partition = lomuto_partition( first, last, *first );
@@ -26,6 +30,7 @@ int main()
         quick_sort_using_lomuto_partition( numbers.begin(), numbers.end() );
 
         std::copy( numbers.cbegin(), numbers.cend(), std::ostream_iterator<int>{ std::cout, " " } );
+        std::cout << std::endl;
     }
 
     return 0;

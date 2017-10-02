@@ -4,20 +4,7 @@
 #include <algorithm>
 #include <utility>
 
-template <typename _Iterator>
-struct range_t
-{
-    _Iterator begin;
-    typename _Iterator::difference_type size;
-};
-
-template <typename _Iterator>
-struct parition_t
-{
-    range_t<_Iterator> less;
-    range_t<_Iterator> equal;
-    range_t<_Iterator> great;
-};
+#include "partition.hpp"
 
 template <typename _BidirectionalIterator, typename T>
 auto hoare_partition( _BidirectionalIterator first, _BidirectionalIterator last, T pivot ) 
