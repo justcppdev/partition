@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.3)
+
+include("gate/cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.19.51.tar.gz"
+    SHA1 "d238dc1dd4db83e45a592f96fdb95d17c688600a"
+)
+
+project(partition)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_EXAMPLES "Build Examples" OFF)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_sources(${PROJECT_NAME} INTERFACE "${PROJECT_SOURCE_DIR}/include/hoare_partition.hpp" "${PROJECT_SOURCE_DIR}/include/lomuto_partition.hpp")
+
+target_include_directories(${PROJECT_NAME} INTERFACE "${PROJECT_SOURCE_DIR}/include")
+
+if(BUILD_TESTS)
+  hunter_add_package(Catch)
+  find_package(Catch CONFIG REQUIRED)
+
+  enable_testing()
+
+  file(GLOB ${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
+  add_executable(tests ${${PROJECT_NAME}_TEST_SOURCES})
+  target_link_libraries(tests ${PROJECT_NAME} Catch::Catch )
+
+  add_test(NAME test_name COMMAND tests "-s" "-r" "compact" "--use-colour" "yes") 
+endif()
