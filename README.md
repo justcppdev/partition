@@ -1,3 +1,6 @@
-# Построение минимальных выпуклых оболочек
-
-https://habrahabr.ru/post/144921/
+```
+cmake -H. -B_builds -DBUILD_TESTS=ON
+cmake --build _builds
+cmake --build _builds --target test -- ARGS=--verbose
+_builds/example
+```
