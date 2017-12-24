@@ -5,8 +5,8 @@
 #include "hoare_partition.hpp"
 #include "lomuto_partition.hpp"
 
-template <typename _ForwardIterator>
-void quick_sort_using_hoare_partition( _ForwardIterator first, _ForwardIterator last )
+template <typename _BidirectionalIterator>
+void quick_sort_using_hoare_partition( _BidirectionalIterator first, _BidirectionalIterator last )
 {
     if( first != last ) {
         auto partition = hoare_partition( first, last, *first );
@@ -15,8 +15,8 @@ void quick_sort_using_hoare_partition( _ForwardIterator first, _ForwardIterator 
     }
 }
 
-template <typename _BidirectionalIterator>
-void quick_sort_using_lomuto_partition( _BidirectionalIterator first, _BidirectionalIterator last )
+template <typename _ForwardIterator>
+void quick_sort_using_lomuto_partition( _ForwardIterator first, _ForwardIterator last )
 {
     if( first != last ) {
         auto partition = lomuto_partition( first, last, *first );
@@ -26,7 +26,7 @@ void quick_sort_using_lomuto_partition( _BidirectionalIterator first, _Bidirecti
 }
 
 
-template<typename TimeT = std::chrono::microseconds>
+template<typename TimeT = std::chrono::nanoseconds>
 struct measure {
     template <typename Procedure, typename ...Args>
     static auto execution( Procedure && procedure, Args && ...args ) -> typename TimeT::rep
@@ -40,8 +40,14 @@ struct measure {
     }
 };
 
+#include <forward_list>
+
 int main()
 {
+//    std::forward_list<int> list{ 5, 4, 3, 2, 1 };
+//    [-] quick_sort_using_hoare_partition( list.begin(), list.end() );
+//    [+] quick_sort_using_lomuto_partition( list.begin(), list.end() );
+    
     for( std::string line; std::getline( std::cin, line ); ) {
         std::stringstream stream{ line };
         std::vector<int> numbers;
